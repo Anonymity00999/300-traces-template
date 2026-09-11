@@ -1,0 +1,33 @@
+{
+  "framework": null,
+  "buildCommand": "npm run build:vercel",
+  "outputDirectory": "dist",
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/archive-admin/:path*",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/archive-library/:path*",
+      "destination": "/",
+      "permanent": false
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+      ]
+    }
+  ],
+  "rewrites": [
+    { "source": "/api/health", "destination": "/api/community?health=1" },
+    { "source": "/api/watch-room/:room", "destination": "/api/community?watchRoom=1&room=:room" },
+    { "source": "/api/watch-room", "destination": "/api/community?watchRoom=1" }
+  ]
+}
