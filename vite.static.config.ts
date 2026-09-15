@@ -24,6 +24,12 @@ function archiveData() {
 const assetRelease = createHash("sha256")
   .update(readFileSync(resolve(import.meta.dirname, "app/trace-archive.tsx")))
   .update(readFileSync(resolve(import.meta.dirname, "app/globals.css")))
+  .update(readFileSync(resolve(import.meta.dirname, "app/held-water.css")))
+  .update(readFileSync(resolve(import.meta.dirname, "app/held-water.tsx")))
+  .update(readFileSync(resolve(import.meta.dirname, "app/spatial-clock.ts")))
+  .update(readFileSync(resolve(import.meta.dirname, "app/scent-field.tsx")))
+  .update(readFileSync(resolve(import.meta.dirname, "app/reading-logic.ts")))
+  .update(readFileSync(resolve(import.meta.dirname, "app/data/trace-types.ts")))
   .update(readFileSync(resolve(import.meta.dirname, "app/instruction-library.tsx")))
   .digest("hex")
   .slice(0, 10);

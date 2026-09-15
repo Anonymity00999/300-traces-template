@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "project": "300 Traces",
+  "stage": "personal-archive-v3-and-replication-handoff",
+  "preparedAt": "2026-09-15T12:58:32.663Z",
+  "entrypoint": "docs/AI_DEPLOY_2026-09-15.md",
+  "history": "docs/HISTORY_建构历程_阶段整理_2026-09-15.md",
+  "requirements": "docs/DESIGN_总体设计与可复用需求_2026-09-15.md",
+  "materials": "materials/catalog.json",
+  "runtime": {
+    "node": "24.x (verified with 24.12.0)",
+    "packageManager": "npm",
+    "lockfile": "package-lock.json",
+    "install": "npm ci",
+    "check": "npm run release:check",
+    "preview": "npm run start",
+    "deploy": "Vercel import using vercel.json"
+  },
+  "personalData": {
+    "topLevelFields": [
+      "userCode",
+      "browsingData",
+      "readingTime",
+      "witnesses"
+    ],
+    "readingTime": "first/last source opening timestamps in UTC; no duration; historical missing values stay unknown"
+  },
+  "requiredServerSecrets": [
+    "BLOB_READ_WRITE_TOKEN",
+    "ARCHIVE_ADMIN_KEY"
+  ],
+  "excluded": [
+    "credentials",
+    "participant data",
+    "private feedback",
+    "raw chats",
+    "raw DOCX",
+    "MOV/MP4",
+    "previous deployment IDs"
+  ],
+  "pending": [
+    "main Bilibili URL",
+    "two scratch Bilibili URLs",
+    "recipient storage configuration",
+    "real Mainland network validation"
+  ],
+  "verification": {
+    "status": "passed-local-reproduction-and-production-api-roundtrip",
+    "checkedAt": "2026-09-15T13:11:59.837Z",
+    "tests": 34,
+    "mainProjectTests": 49,
+    "browserWidths": [
+      390,
+      1280
+    ],
+    "fullArchiveSourceMatch": 294,
+    "rawDocxCount": 335,
+    "report": "docs/VERIFICATION_交接核验_2026-09-15.md",
+    "mainlandRealNetwork": "not-tested-this-turn"
+  },
+  "sourcePolicy": "current reader and API source; clone API is strictly same-origin; public snapshot excludes audience records"
+}

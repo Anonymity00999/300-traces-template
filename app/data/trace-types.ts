@@ -31,5 +31,5 @@ function normaliseTraceType(value: string): TraceType {
 }
 
 export function prepareTraceData(data: RawTrace[]): Trace[] {
-  return data.map((trace) => ({ ...trace, type: normaliseTraceType(trace.type), titleEn: TITLE_TRANSLATIONS[trace.title] }));
+  return data.map((trace) => ({ ...trace, type: normaliseTraceType(trace.type), titleEn: trace.titleEn?.trim() || TITLE_TRANSLATIONS[trace.title] }));
 }

@@ -66,6 +66,26 @@ export type CommunityPayload = {
 
 export const IS_MAINLAND_BUILD = Boolean(import.meta.env.VITE_MAINLAND_ONLY);
 const configuredApiBase = (import.meta.env.VITE_ARCHIVE_API_BASE || "").replace(/\/+$/, "");
+const REQUEST_TIMEOUT_MS = 15_000;
+
+/**
+ * A network request should be allowed to fail into the reader's local fallback.
+ * In particular, a captive portal or a stalled regional route must not leave a
+ * submission or progress sync pending forever.
+ */
+async function fetchWithTimeout(input: RequestInfo | URL, init: RequestInit = {}) {
+  const controller = new AbortController();
+  const abortFromCaller = () => controller.abort();
+  if (init.signal?.aborted) controller.abort();
+  else init.signal?.addEventListener("abort", abortFromCaller, { once: true });
+  const timeout = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  try {
+    return await fetch(input, { ...init, signal: controller.signal });
+  } finally {
+    window.clearTimeout(timeout);
+    init.signal?.removeEventListener("abort", abortFromCaller);
+  }
+}
 
 /** One explicit API boundary. Provider choice belongs in deployment config. */
 function archiveEndpoint(path: string) {
@@ -74,7 +94,7 @@ function archiveEndpoint(path: string) {
 
 export async function archiveRequestWithEndpoint(path: string, init: RequestInit = {}) {
   const endpoint = archiveEndpoint(path);
-  const response = await fetch(endpoint, init);
+  const response = await fetchWithTimeout(endpoint, init);
   return { response, endpoint };
 }
 
@@ -92,7 +112,7 @@ export function resolveMediaPath(value: string, endpoint: string) {
 export async function readCommunity(etag?: string): Promise<{ payload?: CommunityPayload; etag?: string; endpoint?: string; notModified?: boolean }> {
   const headers = etag ? { "if-none-match": etag } : undefined;
   const endpoint = archiveEndpoint("/api/community");
-  const result = await fetch(endpoint, { ...(headers ? { headers } : {}), cache: "default" });
+  const result = await fetchWithTimeout(endpoint, { ...(headers ? { headers } : {}), cache: "default" });
   if (result.status === 304) return { etag, endpoint, notModified: true };
   if (result.ok) return { payload: await result.json() as CommunityPayload, etag: result.headers.get("etag") || undefined, endpoint };
   return { endpoint };

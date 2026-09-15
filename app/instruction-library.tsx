@@ -11,10 +11,10 @@ const SEED_ENTRIES: InstructionEntry[] = [
 ];
 const copy = {
   zh: {
-    title: "指令库", eyebrow: "留存的指令", intro: "把想再次使用的指令留在这里。", instruction: "指令", instructionPlaceholder: "写下要保留的指令…", add: "加入指令库", remove: "移除", empty: "这里还没有指令。", saved: "已经保存到这台设备。", back: "回到阅读档案", toggle: "EN", fixed: "固定指令"
+    title: "指令库", eyebrow: "留存的指令", contribute: "投稿一条指令", instruction: "指令", instructionPlaceholder: "写下要保留的指令…", add: "加入指令库", remove: "移除", empty: "这里还没有指令。", saved: "已经保存到这台设备。", back: "回到阅读档案", toggle: "EN", fixed: "固定指令"
   },
   en: {
-    title: "Instruction library", eyebrow: "Saved instructions", intro: "Keep instructions you may return to here.", instruction: "Instruction", instructionPlaceholder: "Write an instruction to keep…", add: "Add to library", remove: "Remove", empty: "No instructions here yet.", saved: "Saved on this device.", back: "Return to the archive", toggle: "中文", fixed: "Fixed instruction"
+    title: "Instruction library", eyebrow: "Saved instructions", contribute: "Offer an instruction", instruction: "Instruction", instructionPlaceholder: "Write an instruction to keep…", add: "Add to library", remove: "Remove", empty: "No instructions here yet.", saved: "Saved on this device.", back: "Return to the archive", toggle: "中文", fixed: "Fixed instruction"
   }
 } as const;
 
@@ -74,8 +74,8 @@ export function InstructionLibrary() {
 
   return <main className="instruction-library-shell">
     <header className="instruction-library-header"><a className="wordmark" href="/" aria-label={text.back}><span className="wordmark-mark" aria-hidden="true">◌</span><span>300 traces</span></a><nav aria-label="Page tools"><a className="instruction-library-back" href="/">{text.back}</a><button className="language-switch" type="button" onClick={toggleLocale}>{text.toggle}</button></nav></header>
-    <section className="instruction-library-intro"><p className="eyebrow">{text.eyebrow}</p><h1>{text.title}</h1><p>{text.intro}</p></section>
-    <form className="instruction-library-form" onSubmit={add}><label>{text.instruction}<textarea required value={instruction} onChange={(event) => setInstruction(event.target.value)} placeholder={text.instructionPlaceholder} /></label><div className="instruction-library-form-actions"><button className="open-button" type="submit">{text.add}</button>{saved && <span className="instruction-library-feedback" role="status" aria-live="polite">{text.saved}</span>}</div></form>
+    <section className="instruction-library-intro"><p className="eyebrow">{text.eyebrow}</p><h1>{text.title}</h1></section>
+    <details className="instruction-library-contribute"><summary>{text.contribute}<span aria-hidden="true">＋</span></summary><form className="instruction-library-form" onSubmit={add}><label>{text.instruction}<textarea required value={instruction} onChange={(event) => setInstruction(event.target.value)} placeholder={text.instructionPlaceholder} /></label><div className="instruction-library-form-actions"><button className="open-button" type="submit">{text.add}</button>{saved && <span className="instruction-library-feedback" role="status" aria-live="polite">{text.saved}</span>}</div></form></details>
     <section className="instruction-library-list" aria-live="polite">{entries.length ? entries.map((entry) => <article className={entry.fixed ? "instruction-card is-fixed" : "instruction-card"} key={entry.id}><div className="instruction-card-meta"><span>{entry.fixed ? text.fixed : new Date(entry.createdAt).toLocaleString(locale === "zh" ? "zh-CN" : "en-AU")}</span></div><p>{locale === "en" ? entry.instructionEn || entry.instruction : entry.instruction}</p><div className="instruction-card-actions">{!entry.fixed && <button type="button" onClick={() => remove(entry.id)}>{text.remove}</button>}</div></article>) : <p className="instruction-library-empty">{text.empty}</p>}</section>
   </main>;
 }

@@ -241,7 +241,7 @@ const RAW_PERIOD_IMAGES: PeriodImage[] = [
     date: "2026-03-20",
     sourceDate: "2026-03-20",
     dateBasis: "photograph",
-    imageUrl: "/period-images/dragon-dance-2026-03-20.jpg",
+    imageUrl: "/period-images/dragon-dance-2026-03-20-verified.jpg",
     sourceUrl: "https://english.news.cn/20260321/bb7ef8a88e7a4a8db3c4ac93aa2f5e72/c.html",
     sourceLabel: "新华社",
     caption: "3月20日现场｜春分日，江苏句容的孩子们表演舞龙",

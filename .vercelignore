@@ -1,0 +1,6 @@
+node_modules/
+docs/
+tests/
+materials/
+replication-manifest.json
+checksums.sha256

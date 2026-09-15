@@ -15,7 +15,7 @@
       "next": "",
       "all": "全部痕迹",
       "status": "",
-      "open": "打开原文",
+      "open": "穿梭",
       "read": "标记为读过",
       "readAlready": "已经读过",
       "draw": "遇见一条未读痕迹",
@@ -67,7 +67,7 @@
       "submissionPassTitle": "你的记录存档码已与这条见证绑定。",
       "submissionPassNote": "请复制并妥善保存它；以后可在“友情链接 → 我的足迹与见证”导出自己的记录，或在新设备上取回足迹。",
       "submissionPassExport": "现在导出我的足迹与见证",
-      "countryText": "此网站建构于 Gadigal Country。我们向澳大利亚各地的 Traditional Owners 致意，尊重他们与 Country 的持续联系，并向过去、现在与正在成为长者的人表示敬意。",
+      "countryText": "本网站于 Gadigal Country 上建构。我们向 Gadigal 人及澳大利亚各地的 Aboriginal and Torres Strait Islander peoples 致意，尊重他们与 Country 的持续联系，并向过去与现在的长者致敬。",
       "adminEntry": "页面审核/编辑",
       "dialogClose": "关闭"
     },
@@ -82,7 +82,7 @@
       "next": "",
       "all": "All traces",
       "status": "",
-      "open": "Open original",
+      "open": "Traverse",
       "read": "Mark as read",
       "readAlready": "Already read",
       "draw": "Meet an unread trace",
@@ -134,14 +134,20 @@
       "submissionPassTitle": "Your record archive code is now linked to this witness.",
       "submissionPassNote": "Copy and keep it. Later, use “Related links → My traces and witnesses” to export your own record, or recover your traces on another device.",
       "submissionPassExport": "Export my traces and witnesses now",
-      "countryText": "This website is built on Gadigal Country. We acknowledge the Traditional Owners of Country throughout Australia, their continuing connection to Country, and Elders past, present and emerging.",
+      "countryText": "This website was built on Gadigal Country. We acknowledge the Gadigal people and Aboriginal and Torres Strait Islander peoples across Australia, their continuing connections to Country, and Elders past and present.",
       "adminEntry": "Page review / edit",
       "dialogClose": "Close",
       "vimeo": "Watch the film"
     },
     "vimeoUrl": "https://vimeo.com/1219703266?share=copy&fl=sv&fe=ci",
     "backgroundOpacity": 0.15,
-    "contentOrder": ["period", "encounter", "participation", "recent", "secondary"],
+    "contentOrder": [
+      "period",
+      "encounter",
+      "participation",
+      "recent",
+      "secondary"
+    ],
     "relatedLinks": [
       {
         "id": "notion-moliere-viewing",
@@ -175,8 +181,8 @@
         "titleZh": "观剧兑换素问算力 · 以斯帖的晨祷的文章 · 知乎",
         "titleEn": "Watch a play, receive sooon.ai computing power · Esther's Morning Prayer on Zhihu",
         "url": "https://zhuanlan.zhihu.com/p/1971516956931780730",
-        "noteZh": "以前的作品 · 观剧与素问算力之间的一次交换。",
-        "noteEn": "Earlier work · An exchange between watching a play and sooon.ai computing power.",
+        "noteZh": "",
+        "noteEn": "",
         "enabled": true
       },
       {
@@ -187,8 +193,8 @@
         "titleZh": "【第六期村友聚会服务】让水果带来一个世界 · 以斯帖的晨祷的文章 · 知乎",
         "titleEn": "Sixth village gathering service · Let fruit bring a world · Esther's Morning Prayer on Zhihu",
         "url": "https://zhuanlan.zhihu.com/p/2032092423548039573",
-        "noteZh": "以前的作品 · 从水果出发的村友聚会服务。",
-        "noteEn": "Earlier work · A village gathering service beginning with fruit.",
+        "noteZh": "",
+        "noteEn": "",
         "enabled": true
       },
       {
@@ -254,25 +260,13 @@
       {
         "id": "zhihu-nell-nell-breakup-disconnection",
         "kind": "community",
-        "activityId": "zhihu-nell-nell",
+        "activityId": "breakup-disconnection",
         "activityRole": "activity",
-        "titleZh": "知乎答主 nell nell 的 App ·《分手断连》",
-        "titleEn": "Zhihu answerer nell nell · App: Breakup Disconnection",
-        "url": "https://www.zhihu.com/people/98-22-89-83-29",
-        "noteZh": "当前以答主知乎主页作为入口；App 名称按你提供的资料标注。",
-        "noteEn": "The answerer’s Zhihu profile is the current entrance; the app title follows the supplied information.",
-        "enabled": true
-      },
-      {
-        "id": "zhihu-village-history-community",
-        "kind": "community",
-        "activityId": "zhihu-nell-nell",
-        "activityRole": "related",
-        "titleZh": "村友历史创作／社群讯息",
-        "titleEn": "Village-friend history, earlier works and community notes",
-        "url": "https://www.zhihu.com/people/98-22-89-83-29",
-        "noteZh": "从答主知乎主页进入相关历史创作与社群讯息。",
-        "noteEn": "Enter through the answerer’s Zhihu profile for related earlier works and community notes.",
+        "titleZh": "《分手断联》App",
+        "titleEn": "Breakup Disconnection · App",
+        "url": "https://apps.apple.com/cn/app/%E5%88%86%E6%89%8B%E6%96%AD%E8%81%94-28%E5%A4%A9%E8%87%AA%E6%84%88%E6%97%85%E7%A8%8B/id6763101191",
+        "noteZh": "28 天自愈旅程。",
+        "noteEn": "A 28-day self-recovery journey.",
         "enabled": true
       },
       {
@@ -298,11 +292,5 @@
         "enabled": true
       }
     ]
-  },
-  "syncedAt": "2026-08-30T00:00:00.000Z",
-  "source": "https://300-traces-archive.vercel.app",
-  "sources": {
-    "full": 0,
-    "mainland": 0
   }
 }

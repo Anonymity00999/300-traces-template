@@ -51,6 +51,8 @@ export function normalizeRelatedLinks(value: unknown): RelatedLink[] {
     if (!item || typeof item !== "object") return [];
     const source = item as Record<string, unknown>;
     const id = typeof source.id === "string" && /^[A-Za-z0-9_-]{1,60}$/.test(source.id) ? source.id : `link-${index + 1}`;
+    // Retired by the owner; also exclude it when old cloud settings are read.
+    if (id === "zhihu-village-history-community") return [];
     if (seen.has(id)) return [];
     const url = typeof source.url === "string" ? source.url.trim() : "";
     try {
@@ -60,6 +62,7 @@ export function normalizeRelatedLinks(value: unknown): RelatedLink[] {
     const titleZh = typeof source.titleZh === "string" ? source.titleZh.trim().slice(0, 160) : "";
     const titleEn = typeof source.titleEn === "string" ? source.titleEn.trim().slice(0, 160) : "";
     const activityId = typeof source.activityId === "string" && /^[A-Za-z0-9_-]{1,60}$/.test(source.activityId) ? source.activityId : "";
+    const omitNote = id === "zhihu-moliere-viewing" || id === "zhihu-fruit-world";
     if (!titleZh && !titleEn) return [];
     seen.add(id);
     return [{
@@ -70,8 +73,8 @@ export function normalizeRelatedLinks(value: unknown): RelatedLink[] {
       titleZh: titleZh || titleEn,
       titleEn: titleEn || titleZh,
       url,
-      ...(typeof source.noteZh === "string" && source.noteZh.trim() ? { noteZh: source.noteZh.trim().slice(0, 240) } : {}),
-      ...(typeof source.noteEn === "string" && source.noteEn.trim() ? { noteEn: source.noteEn.trim().slice(0, 240) } : {}),
+      ...(!omitNote && typeof source.noteZh === "string" && source.noteZh.trim() ? { noteZh: source.noteZh.trim().slice(0, 240) } : {}),
+      ...(!omitNote && typeof source.noteEn === "string" && source.noteEn.trim() ? { noteEn: source.noteEn.trim().slice(0, 240) } : {}),
       enabled: source.enabled !== false,
     } satisfies RelatedLink];
   });
