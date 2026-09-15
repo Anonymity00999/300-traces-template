@@ -269,7 +269,7 @@
 .held-water .period-sound-actions a,.held-water .period-sound-play { display:inline-flex; align-items:center; min-height:44px; font-size:11px; }
 .held-water .period-sound-continuity { border:0; padding:28px 0 0; background:none; }
 .held-water .period-sound-continuity[hidden] { display:none; }
-.held-water .secondary-section { margin-top:90px; padding-top:28px; }
+.held-water .secondary-section { margin-top:90px; padding-top:28px; border-top:1px solid #81939766; }
 .held-water .secondary-toggle { min-height:70px; padding-bottom:22px; border:0; }
 .held-water .secondary-toggle strong { font-size:27px; }
 .held-water .secondary-panel { padding:12px 0 32px; border:0; background:none; gap:48px; }

@@ -1,6 +1,13 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { cleanIds, cleanOpeningTimes, mergeOpeningTimes, recordOpening, ownLocalWitnesses, personalExport } from '../app/participant-data.ts';
+import { revealedScratchFilm } from '../app/data/scratch-films.ts';
+test('scratch choice is restored from this pass and cannot show the other revealed film', () => {
+  assert.equal(revealedScratchFilm(new Set()), undefined);
+  assert.equal(revealedScratchFilm(new Set(['film-film-two']))?.id, 'film-two');
+  assert.equal(revealedScratchFilm(new Set(['film-film-two','film-film-one']))?.id, 'film-two');
+  assert.equal(revealedScratchFilm(new Set(['film-main'])), undefined);
+});
 test('personal archive has exactly four categories and strips operational/private fields', () => {
   const data = personalExport('test-code', [{ id:'a', kind:'trace', sourceUrl:'https://example.org/a', excerptZh:'not needed', metadata:'secret' }], {}, [{ id:'w', url:'https://example.org', contact:'private', participantKey:'secret', status:'pending', metadata:{} }]);
   assert.deepEqual(Object.keys(data), ['userCode','browsingData','readingTime','witnesses']);

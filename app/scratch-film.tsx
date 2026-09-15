@@ -14,25 +14,26 @@ function usableUrl(raw: string) {
   return safeBilibiliVideoUrl(raw);
 }
 
-export function ScratchFilmEntrance({ locale }: { locale: "zh" | "en" }) {
+export function ScratchFilmEntrance({ locale, revealedFilm, ready, onReveal }: { locale: "zh" | "en"; revealedFilm?: ScratchFilm; ready: boolean; onReveal: (id: string) => void }) {
   const [selected, setSelected] = useState<number | null>(null);
+  const revealedButton = useRef<HTMLButtonElement>(null);
   const zh = locale === "zh";
   if (!SCRATCH_FILMS_ENABLED || SCRATCH_FILMS.length !== 2) return null;
   return <section id="scratch-films" className="scratch-film" aria-labelledby="scratch-film-title">
     <div className="scratch-film-heading">
-      <h2 id="scratch-film-title">{zh ? "表面之下" : "Beneath the surface"}</h2>
-      <p>{zh ? "选一面，慢慢刮开。" : "Choose a surface. Rub it open."}</p>
+      <h2 id="scratch-film-title">{zh ? "感到疲惫？来敲彩蛋！" : "Feeling tired? Crack open a surprise!"}</h2>
     </div>
-    {selected === null ? <div className="scratch-film-choices">
+    {revealedFilm ? <div className="scratch-film-stage is-revealed"><RevealedFilm film={revealedFilm} zh={zh} buttonRef={revealedButton} /></div> : selected === null ? <div className="scratch-film-choices" aria-busy={!ready}>
       {SCRATCH_FILMS.map((film, i) => <button type="button" className="scratch-film-choice" key={film.id}
-        onClick={() => setSelected(i)} aria-label={zh ? `选择影像 ${i + 1}` : `Choose film ${i + 1}`}>
-        <span aria-hidden="true">0{i + 1}</span>
+        disabled={!ready} onClick={() => setSelected(i)} aria-label={zh ? film.titleZh : film.titleEn}>
+        <span className="scratch-film-choice-number" aria-hidden="true">0{i + 1}</span>
+        <span className="scratch-film-choice-title">{zh ? film.titleZh : film.titleEn}</span>
       </button>)}
-    </div> : <ScratchSurface key={SCRATCH_FILMS[selected].id} film={SCRATCH_FILMS[selected]} locale={locale} onBack={() => setSelected(null)} />}
+    </div> : <ScratchSurface key={SCRATCH_FILMS[selected].id} film={SCRATCH_FILMS[selected]} locale={locale} onBack={() => setSelected(null)} onReveal={() => onReveal(SCRATCH_FILMS[selected].id)} />}
   </section>;
 }
 
-function ScratchSurface({ film, locale, onBack }: { film: ScratchFilm; locale: "zh" | "en"; onBack: () => void }) {
+function ScratchSurface({ film, locale, onBack, onReveal }: { film: ScratchFilm; locale: "zh" | "en"; onBack: () => void; onReveal: () => void }) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const sampler = useRef<HTMLCanvasElement | null>(null);
   const pointer = useRef<{ id: number; point: Point } | null>(null);
@@ -52,6 +53,7 @@ function ScratchSurface({ film, locale, onBack }: { film: ScratchFilm; locale: "
     opened.current = true;
     pointer.current = null;
     setRevealed(true);
+    onReveal();
   };
 
   useEffect(() => {
@@ -155,10 +157,10 @@ function ScratchSurface({ film, locale, onBack }: { film: ScratchFilm; locale: "
       <details className="scratch-film-access"><summary>{zh ? "另一种打开方式" : "Another way in"}</summary><button type="button" onClick={reveal}>{zh ? "轻触揭晓" : "Reveal with a tap"}</button></details>
       {noCanvas && <p>{zh ? "这个浏览器可用轻触揭晓。" : "Use the tap-to-reveal option in this browser."}</p>}
     </>}
-    <div className="scratch-film-actions">
+    {!revealed && <div className="scratch-film-actions">
       {!revealed && armed && <button type="button" onClick={() => { setArmed(false); pointer.current = null; }}>{zh ? "暂时放下" : "Rest for a moment"}</button>}
       <button type="button" onClick={onBack}>{zh ? "回到两面" : "Return to both surfaces"}</button>
-    </div>
+    </div>}
   </div>;
 }
 

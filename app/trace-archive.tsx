@@ -16,6 +16,7 @@ import { MAIN_BILIBILI_URL, MAIN_VIMEO_URL } from "./data/film-entrance";
 import { defaultPageCopy as sharedDefaultPageCopy, readerSurfaceCopy } from "./page-copy";
 import { SpatialGlass, PeriodTimeline } from "./held-water";
 import { ScratchFilmEntrance } from "./scratch-film";
+import { SCRATCH_FILMS_ENABLED, revealedScratchFilm } from "./data/scratch-films";
 import { nextDistinctId, nextTraceId, traceCandidates, traceIsRead, periodSelection, hasTraceExcerpt, translationFor, type TraceTranslation } from "./reading-logic";
 import { startupClockFrame } from "./spatial-clock";
 import { cleanIds, cleanOpeningTimes, mergeOpeningTimes, recordOpening, ownLocalWitnesses, personalExport, type OpeningTimes } from "./participant-data";
@@ -728,14 +729,17 @@ export function TraceArchive() {
   const approvedImages = PERIOD_IMAGES.filter((image) => image.status === "approved");
   const approvedAudio = PERIOD_AUDIO.filter((entry) => entry.status === "approved");
   const archiveTotal = allTraces.length;
-  const total = archiveTotal + approvedImages.length + publicEventEntries.length + approvedAudio.length + relatedLinks.length + (vimeoUrl || zhihuVideoUrl || bilibiliVideoUrl ? 1 : 0);
+  const openedScratchFilm = revealedScratchFilm(readSet);
+  const filmTotal = (vimeoUrl || zhihuVideoUrl || bilibiliVideoUrl ? 1 : 0) + (SCRATCH_FILMS_ENABLED ? 1 : 0);
+  const filmRead = (vimeoUrl || zhihuVideoUrl || bilibiliVideoUrl ? (readSet.has(readableKey("film", "main")) ? 1 : 0) : 0) + (SCRATCH_FILMS_ENABLED && openedScratchFilm ? 1 : 0);
+  const total = archiveTotal + approvedImages.length + publicEventEntries.length + approvedAudio.length + relatedLinks.length + filmTotal;
   const auxiliaryReadCount = (kind: Exclude<ReadableKind, "trace">, ids: string[]) => ids.filter((id) => readSet.has(readableKey(kind, id))).length;
   const totalRead = allTraces.filter((trace) => isReadId(readSet, trace)).length
     + auxiliaryReadCount("image", approvedImages.map((image) => image.id))
     + auxiliaryReadCount("event", publicEventEntries.map((event) => event.id))
     + auxiliaryReadCount("audio", approvedAudio.map((entry) => entry.id))
     + auxiliaryReadCount("link", relatedLinks.map((link) => link.id))
-    + (vimeoUrl || zhihuVideoUrl || bilibiliVideoUrl ? (readSet.has(readableKey("film", "main")) ? 1 : 0) : 0);
+    + filmRead;
   const defaultText = sharedDefaultPageCopy(locale, archiveTotal);
   const t: Record<string, string> = Object.fromEntries(Object.entries({ ...defaultText, ...siteSettings[locale] }).map(([key, value]) => [key, typeof value === "string" ? value : ""]));
   const traverseLabel = locale === "zh" ? "穿梭" : "Traverse";
@@ -787,7 +791,7 @@ export function TraceArchive() {
     { key: "image", label: t.labelImage, dot: "image", total: approvedImages.length, read: auxiliaryReadCount("image", approvedImages.map((image) => image.id)) },
     { key: "event", label: t.labelEvent, dot: "event", total: publicEventEntries.length, read: auxiliaryReadCount("event", publicEventEntries.map((event) => event.id)) },
     { key: "audio", label: t.labelAudio, dot: "audio", total: approvedAudio.length, read: auxiliaryReadCount("audio", approvedAudio.map((entry) => entry.id)) },
-    ...(vimeoUrl || zhihuVideoUrl || bilibiliVideoUrl ? [{ key: "film", label: t.labelFilm, dot: "film", total: 1, read: readSet.has(readableKey("film", "main")) ? 1 : 0 }] : []),
+    ...(filmTotal ? [{ key: "film", label: t.labelFilm, dot: "film", total: filmTotal, read: filmRead }] : []),
     { key: "link", label: t.labelLink, dot: "link", total: relatedLinks.length, read: auxiliaryReadCount("link", relatedLinks.map((link) => link.id)) },
   ];
   const editable = t;
@@ -944,6 +948,7 @@ export function TraceArchive() {
       ...encounteredAudio,
       ...encounteredLinks,
       ...encounteredFilm,
+      ...(openedScratchFilm ? [{ kind: "film", id: openedScratchFilm.id, titleZh: openedScratchFilm.titleZh, titleEn: openedScratchFilm.titleEn, sourceUrl: absoluteUrl(openedScratchFilm.url) }] : []),
     ];
     const exportPayload = personalExport(userCode, encounteredMaterials, readingTime, records);
     const date = exportedAt.slice(0, 10);
@@ -1050,7 +1055,7 @@ export function TraceArchive() {
     <>
       <SurrealClockField active={false} />
       {timeGesture && <div key={timeGesture.seed} className={`interaction-time-echo motif-${timeGesture.motif}`} style={{ "--time-echo-tilt": `${timeGesture.tilt}deg` } as CSSProperties} role="status" aria-live="polite">{timeGesture.motif !== "candle" && <div className="interaction-hourglass" aria-hidden="true"><span className="interaction-hourglass-glass"><i className="interaction-hourglass-sand interaction-hourglass-sand-top" /><i className="interaction-hourglass-sand interaction-hourglass-sand-bottom" /><i className="interaction-hourglass-stream" /></span></div>}{timeGesture.motif !== "sand" && <div className="candle-object" aria-hidden="true"><i className="candle-flame" /><span className="candle-wick" /><span className="candle-wax" /><i className="candle-drip" /></div>}<span>{timeGestureLabel(timeGesture.gesture, t)}</span></div>}
-      <ScratchFilmEntrance locale={locale} />
+      <ScratchFilmEntrance key={passport} locale={locale} revealedFilm={openedScratchFilm} ready={localStorageHydrated && syncReady} onReveal={(id) => markContentRead("film", id)} />
       {!IS_MAINLAND_BUILD && <section className="country-acknowledgement" aria-labelledby="country-acknowledgement-heading">
         <div className="country-flag-pair" aria-label={t.countryFlagAlt}>
           <div className="country-flag-mark" role="img" aria-label={locale === "zh" ? "澳大利亚原住民旗帜色彩" : "Australian Aboriginal Flag colours"}><span aria-hidden="true" /></div>
